@@ -1,8 +1,14 @@
+'use strict';
+
+const args = require('yargs').argv;
+
 const fs = require('fs');
 const readline = require('readline');
 
+const filePath = args.path || 'tmp/access.log';
+
 const readInterface = readline.createInterface({
-    input: fs.createReadStream('tmp/access.log'),
+    input: fs.createReadStream(filePath),
     // output: process.stdout,
     console: false
 });
