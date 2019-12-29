@@ -9,6 +9,7 @@
   "author": "Jérémy Halin",
   "license": "ISC",
   "dependencies": {
+    "http-status-codes": "^1.4.0",
     "yargs": "^15.0.2"
   }
 }
