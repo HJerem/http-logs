@@ -2,7 +2,7 @@
  Simple program that reads a log file and displays statistics
 
 ## How to use ?
-    node index.js --path=/path/to/log/file.log
+    node watch-logs --path=/path/to/log/file.log
 path arg is optional.
 
 ## Needs
@@ -13,4 +13,4 @@ path arg is optional.
 
 ## Difficulties
 - I didn't know how to keep reading a file as it's modified in nodejs
-- 
+- I had to create a fake realtime log to test my code
