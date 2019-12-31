@@ -35,6 +35,7 @@ function processLogs() {
     const start = new Date();
     const end = new Date(start.getTime() + time);
     let logs = {};
+    let visitorsIP = [];
     const stream = fs.createReadStream(filePath, {
         encoding: 'utf-8',
         flags: 'r',
@@ -49,6 +50,12 @@ function processLogs() {
                 if (line !== '') {
                     const result = line.match(/^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(\S+)\s?(\S+)?\s?(\S+)?" (\d{3}|-) (\d+|-)\s?"?([^"]*)"?\s?"?([^"]*)?"?$/);
                     if (result) {
+                        let ip = result[1];
+
+                        if (visitorsIP.indexOf(ip) === -1) {
+                            visitorsIP.push(ip);
+                        }
+
                         let urlParts = result[6].split('/');
                         const section = urlParts[1];
                         const code = result[8];
@@ -123,6 +130,7 @@ function processLogs() {
                 const now = new Date();
                 console.info(`Here is what happened from ${start} to ${end} for log file ${filePath} (last ${seconds} seconds)`);
                 console.table(stats);
+                console.info(`${visitorsIP.length} unique visits`);
             } else {
                 console.info('No stats to display');
             }
