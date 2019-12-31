@@ -2,8 +2,9 @@
  Simple program that reads a log file and displays statistics
 
 ## How to use ?
-    node watch-logs --path=/path/to/log/file.log
-path arg is optional.
+    node watch-logs --path=/path/to/log/file.log --time=10000
+path arg is optional (default to /tmp/access.log).
+time arg is optional (default to 10000 milliseconds).
 
 ## Needs
 
