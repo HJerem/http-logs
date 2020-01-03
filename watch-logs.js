@@ -109,7 +109,7 @@ function processLogs() {
                 let errors = 0;
                 let redirections = 0;
                 for (const [code, number] of Object.entries(logs[item[0]].codes)) {
-                    if (code.substr(0, 1) === '4') {
+                    if (code.substr(0, 1) === '4' || code.substr(0, 1) === '5') {
                         errors += number;
                     } else if (code.substr(0, 1) === '3') {
                         redirections += number;
