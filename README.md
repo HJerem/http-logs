@@ -10,7 +10,9 @@ You will need to have Node.js installed.
 
 #### Optional arguments
 path: relative path to file (default to /tmp/access.log).
+
 time: time in milliseconds to wait between two reads of the file (default to 10000 milliseconds).
+
 limit: limit of sections of the website to display (default to 5).
 
 ## Improvements
