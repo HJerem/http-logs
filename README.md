@@ -15,7 +15,7 @@ time: time in milliseconds to wait between two reads of the file (default to 100
 
 limit: limit of sections of the website to display (default to 5).
 
-## Improvements
+## Possible improvements
 - show most visited webpages (not only section)
 - show most recurrent IP
 - detect DDoS attack ?
