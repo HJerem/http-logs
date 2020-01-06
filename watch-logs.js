@@ -7,6 +7,7 @@ const readline = require('readline');
 
 const filePath = args.path || '/tmp/access.log';
 const time = args.time || 10000;
+const sectionsLimit = args.limit || 5;
 
 const seconds = time / 1000;
 let currentPosition = 0;
@@ -41,51 +42,52 @@ function processLogs() {
         flags: 'r',
         start: currentPosition
     });
-    stream.on('data', function (chunk) {
-        currentPosition += chunk.length;
-        const lines = chunk.toString().split("\n");
+    stream
+        .on('data', function (chunk) {
+            currentPosition += chunk.length;
+            const lines = chunk.toString().split("\n");
 
-        if (lines) {
-            lines.forEach(function (line) {
-                if (line !== '') {
-                    const result = line.match(/^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(\S+)\s?(\S+)?\s?(\S+)?" (\d{3}|-) (\d+|-)\s?"?([^"]*)"?\s?"?([^"]*)?"?$/);
-                    if (result) {
-                        let ip = result[1];
+            if (lines) {
+                lines.forEach(function (line) {
+                    if (line !== '') {
+                        const result = line.match(/^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(\S+)\s?(\S+)?\s?(\S+)?" (\d{3}|-) (\d+|-)\s?"?([^"]*)"?\s?"?([^"]*)?"?$/);
+                        if (result) {
+                            let ip = result[1];
 
-                        if (visitorsIP.indexOf(ip) === -1) {
-                            visitorsIP.push(ip);
+                            if (visitorsIP.indexOf(ip) === -1) {
+                                visitorsIP.push(ip);
+                            }
+
+                            let urlParts = result[6].split('/');
+                            const section = urlParts[1];
+                            const code = result[8];
+
+                            // check if section has already been created
+                            if (typeof logs[section] === 'undefined') {
+                                logs[section] = {
+                                    visits: 0
+                                };
+                            }
+
+                            logs[section].visits += 1;
+
+                            if (typeof logs[section].codes === 'undefined') {
+                                logs[section].codes = {};
+                            }
+
+                            if (typeof logs[section].codes[code] === 'undefined') {
+                                logs[section].codes[code] = 0;
+                            }
+
+                            logs[section].codes[code] += 1;
+                        } else {
+                            console.warn('Skipping wrongly formatted line: ', line);
                         }
-
-                        let urlParts = result[6].split('/');
-                        const section = urlParts[1];
-                        const code = result[8];
-
-                        // check if section has already been created
-                        if (typeof logs[section] === 'undefined') {
-                            logs[section] = {
-                                visits: 0
-                            };
-                        }
-
-                        logs[section].visits += 1;
-
-                        if (typeof logs[section].codes === 'undefined') {
-                            logs[section].codes = {};
-                        }
-
-                        if (typeof logs[section].codes[code] === 'undefined') {
-                            logs[section].codes[code] = 0;
-                        }
-
-                        logs[section].codes[code] += 1;
-                    } else {
-                        console.warn('Skipping wrongly formatted line: ', line);
                     }
-                }
-            })
-        }
-        // console.log(chunk.toString().split("\n"));
-    })
+                })
+            }
+            // console.log(chunk.toString().split("\n"));
+        })
         .on('close', function () {
             let sortable = [];
 
@@ -96,7 +98,10 @@ function processLogs() {
             sortable.sort(function (a, b) {
                 return b[1] - a[1];
             });
-            // sortable = sortable.slice(0, 10);
+
+            if (sectionsLimit) {
+                sortable = sortable.slice(0, sectionsLimit - 1);
+            }
 
             const stats = {};
 
@@ -118,6 +123,8 @@ function processLogs() {
 
                 errorRate = (errors / total) * 100;
                 redirectionRate = (redirections / total) * 100;
+                errorRate = errorRate.toFixed(2) + '%';
+                redirectionRate = redirectionRate.toFixed(2) + '%';
 
                 stats[item[0]] = {
                     visits: item[1],
@@ -127,12 +134,11 @@ function processLogs() {
             });
 
             if (stats) {
-                const now = new Date();
-                console.info(`Here is what happened from ${start} to ${end} for log file ${filePath} (last ${seconds} seconds)`);
+                console.info(`Most visited sections from ${start.toLocaleTimeString()} to ${end.toLocaleTimeString()} for log file ${filePath} (last ${seconds} seconds)`);
                 console.table(stats);
-                console.info(`${visitorsIP.length} unique visits`);
+                console.info(`${visitorsIP.length} total unique visits`);
             } else {
-                console.info('No stats to display');
+                console.info('No visits, no stats to display');
             }
         })
 
