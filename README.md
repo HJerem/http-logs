@@ -6,9 +6,17 @@
 You will need to have Node.js installed.
 
 ### Run program
-    node watch-logs --path=/path/to/log/file.log --time=10000
-path argument is optional (default to /tmp/access.log).
-time argument is optional (default to 10000 milliseconds).
+    node watch-logs --path=/path/to/log/file.log --time=10000 --limit=5
+
+#### Optional arguments
+path: relative path to file (default to /tmp/access.log).
+time: time in milliseconds to wait between two reads of the file (default to 10000 milliseconds).
+limit: limit of sections of the website to display (default to 5).
+
+## Improvements
+- show most visited webpages (not only section)
+- show most recurrent IP
+- detect DDoS attack ?
 
 ## Needs
 - we need to keep the file open so we can continuously read it in realtime, as it's modified
