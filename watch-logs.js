@@ -3,7 +3,6 @@
 const args = require('yargs').argv;
 
 const fs = require('fs');
-const readline = require('readline');
 
 const filePath = args.path || '/tmp/access.log';
 const time = args.time || 10000;
@@ -21,10 +20,10 @@ try {
             setTimeout(processLogs, time);
         })
     } else {
-        console.warn(`There is no file existing at provided path ${filePath}`);
+        console.error(`There is no file existing at provided path ${filePath}`);
     }
 } catch (err) {
-    console.warn(err);
+    console.error(err);
 }
 
 // open file
@@ -86,7 +85,6 @@ function processLogs() {
                     }
                 })
             }
-            // console.log(chunk.toString().split("\n"));
         })
         .on('close', function () {
             let sortable = [];
@@ -105,7 +103,6 @@ function processLogs() {
 
             const stats = {};
 
-            // console.log(sortable);
             sortable.forEach(function (item) {
                 // calculate error rates
                 let errorRate = 0;
