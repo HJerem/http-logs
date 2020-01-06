@@ -9,7 +9,7 @@ You will need to have Node.js installed.
     node watch-logs --path=/path/to/log/file.log --time=10000 --limit=5
 
 #### Optional arguments
-path: relative path to file (default to /tmp/access.log).
+path: relative or absolute path to file (default to /tmp/access.log).
 
 time: time in milliseconds to wait between two reads of the file (default to 10000 milliseconds).
 
