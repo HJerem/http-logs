@@ -5,6 +5,10 @@
 ### Prerequisites
 You will need to have Node.js installed.
 
+1. clone this repo to the folder of your choice
+2. go to the folder where clone the repo and execute `npm install`
+3. open a terminal and run the command below
+
 ### Run program
     node watch-logs --path=/path/to/log/file.log --time=10000 --limit=5
 
