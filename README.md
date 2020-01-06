@@ -17,14 +17,15 @@ limit: limit of sections of the website to display (default to 5).
 
 ## Possible improvements
 - show most visited webpages (not only section)
-- show most recurrent IP
+- show most recurrent IPs
 - detect DDoS attack ?
-
-## Needs
-- we need to keep the file open so we can continuously read it in realtime, as it's modified
-- we need to read the file every 10 seconds (could be configurable)
-- we need to display stats about those past 10 seconds
+- create notifications based on events (e.g. send an email or SMS if error rates go beyond 10%)
+- save data to database to keep history
+- display charts over time
+- use ESLint on project
+- implement tests
 
 ## Difficulties
 - I didn't know how to keep reading a file as it's modified in Node.js
 - I had to create a fake realtime log file to test my code
+- I had to find the correct regex to be able to read and split data for each access log line
